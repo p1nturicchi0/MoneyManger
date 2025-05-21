@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% block title %} Dashboard {% endblock %}
+{% block content %}
+    <div class="container py-4">
+        <div class="text-center mb-4">
+            <a class="btn btn-primary px-4 py-2" href="{% url 'limit' %}" role="button">
+                Set limit
+            </a>
+        </div>
+
+        <!--Monthly Cards -->
+        {% if first_page %}
+            <div class="row">
+                {% for data in monthly_data %}
+                    <div class="col-md-4">
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">{{ data.month }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Transactions:</strong> {{ data.total_expenses }}</p>
+                                <p><strong>Limit:</strong> {{ data.limit }}</p>
+                                <p><strong>Status:</strong>
+                                    {% if data.status == 'Moderate spender' %}
+                                        <span class="badge bg-success">{{ data.status }}</span>
+                                    {% elif data.status == 'Big spender' %}
+                                        <span class="badge bg-warning">{{ data.status }}</span>
+                                    {% elif data.status == 'At risk' %}
+                                        <span class="badge bg-danger">{{ data.status }}</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">{{ data.status }}</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- Filter Form -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <form method="get" class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label for="month" class="form-label">Month</label>
+                        <select name="month" id="month" class="form-select">
+                            <option value="">Select Month</option>
+                            <option value="1">January</option>
+                            <option value="2">February</option>
+                            <option value="3">March</option>
+                            <option value="4">April</option>
+                            <option value="5">May</option>
+                            <option value="6">June</option>
+                            <option value="7">July</option>
+                            <option value="8">August</option>
+                            <option value="9">September</option>
+                            <option value="10">October</option>
+                            <option value="11">November</option>
+                            <option value="12">December</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="year" class="form-label">Year</label>
+                        <select name="year" id="year" class="form-select">
+                            <option value="">Select Year</option>
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary w-100">Filter</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Transactions shown only after filter -->
+        {% if all_entries %}
+            <h4 class="mb-3">Selected transactions</h4>
+            <div class="row">
+                {% for transaction in all_entries %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 shadow-sm text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ transaction.name }}</h5>
+                                <p class="card-text"><strong>Suma:</strong> {{ transaction.amount }}</p>
+                                <div class="dropdown">
+                                    <button class="btn btn-primary dropdown-toggle" type="button"
+                                            data-bs-toggle="dropdown" aria-expanded="false">
+                                        More actions
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item"
+                                               href="{% url 'update_transaction' transaction.id %}">Update</a></li>
+                                        <li><a class="dropdown-item"
+                                               href="{% url 'delete_transaction' transaction.id %}">Delete</a></li>
+                                        <li><a class="dropdown-item"
+                                               href="{% url 'transaction_details' transaction.id %}">Details</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

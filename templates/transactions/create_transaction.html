@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %} Add new transaction {% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <br><br>
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="text-center">Add new transaction</h3>
+                    </div>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="card-body">
+                            {{ form }}
+                        </div>
+                        <div class="card-footer text-center">
+                            <button type="submit" class="btn btn-primary">SAVE</button>
+                            <a href="{% url 'dashboard' %}" class="btn btn-danger">Back to List</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
