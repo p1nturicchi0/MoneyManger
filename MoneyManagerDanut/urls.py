@@ -21,9 +21,8 @@ from django.contrib.auth import views
 
 urlpatterns = [
     path('', include('home.urls')),
-    path("login/", views.LoginView.as_view(form_class=AuthenticationNewForm)),
+    path("login/", views.LoginView.as_view(form_class=AuthenticationNewForm), name="login"),
     path('', include('transactions.urls')),
-    path('auth/', include('django.contrib.auth.urls')),
+    path('', include('django.contrib.auth.urls')),
     path('', include('userextend.urls')),
-
 ]

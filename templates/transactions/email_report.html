@@ -1,0 +1,16 @@
+Hello {{ user.username }},
+
+This is your monthly requested report:
+
+Month: {{ month_name }}
+Name: {{ user.first_name }} {{ user.last_name }}
+Email: {{ user.email }}
+
+Transacctions:
+{% for transaction in transactions %}
+- {{ transaction.transaction_date }} | {{ transaction.transaction_type | title }} | {{ t.amount }}
+{% endfor %}
+
+Montlhy Limit: {{ limit }} RON
+Total spent: {{ total_expenses }} RON
+Percentage: {{ procent }}%

@@ -8,16 +8,17 @@
             <div class="col-md-8 col-lg-6">
                 <div class="card shadow-lg border-0 rounded-4">
                     <div class="card-body text-center ">
-
                         <h4 class="card-title  bg-primary text-light mb-4">{{ transaction | title }}</h4>
-
                         <ul class="list-group list-group-flush text-start">
                             <li class="list-group-item"><strong>Name:</strong> {{ transaction.name | title }}</li>
+                            <li class="list-group-item">
+                                <strong>Type:</strong> {{ transaction.transaction_type | title }}</li>
                             <li class="list-group-item"><strong>Amount:</strong> {{ transaction.amount }}</li>
                             <li class="list-group-item"><strong>Transaction
                                 Date:</strong> {{ transaction.transaction_date|date:"d-m-Y" }}</li>
+                            <li class="list-group-item"><strong>Update
+                                at:</strong> {{ transaction.updated_at|date:"d-m-Y H:i:s" }}</li>
                         </ul>
-
                         <div class="mt-4">
                             <a href="{% url 'dashboard' %}" class="btn btn-primary">Back to List</a>
                         </div>

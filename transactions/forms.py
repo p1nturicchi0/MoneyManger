@@ -1,7 +1,5 @@
 from django import forms
-
-from datetime import datetime
-
+from datetime import datetime, date
 from transactions.models import Transaction, Limit
 
 
@@ -17,16 +15,19 @@ class TransactionForm(forms.ModelForm):
             'transaction_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
         }
 
-
-
+# A validation form so the user can`t have unreasonable data
     def clean(self):
         cleaned_data = self.cleaned_data
+
+# The amount can`t be negative
 
         all_amounts = Transaction.objects.all()
         for transaction in all_amounts:
             if transaction.amount < 0:
                 msg = "Amount can not be negative!"
                 self.add_error('amount', msg)
+
+# The transaction can`t be a future transaction
 
         get_transaction_date = cleaned_data.get('transaction_date')
         now = datetime.now().date()
@@ -41,13 +42,17 @@ class TransactionUpdateForm(forms.ModelForm):
         model = Transaction
         exclude = ['name', 'transaction_date', 'user']
 
-
         widgets = {
             'amount': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Amount'}),
             'transaction_type': forms.Select(attrs={'class': 'form-select'}),
         }
 
 class LimitForm(forms.ModelForm):
+    month = forms.DateField(
+        widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'month'}),
+        input_formats=['%Y-%m'],
+    )
+
     class Meta:
         model = Limit
         exclude = ['total', 'user']
@@ -55,15 +60,15 @@ class LimitForm(forms.ModelForm):
         widgets = {
 
             'limit': forms.NumberInput(attrs={'class': 'form-control',  'placeholder': 'Max desired limit'}),
+            'month': forms.DateInput(attrs={'class': 'form-control', 'type': 'month'}),
+
         }
 
-    def clean(self):
-        cleaned_data = self.cleaned_data
+# Limit can`t be negative
 
-        all_limits = Limit.objects.all()
-        for limit in all_limits:
-            if limit.limit < 0:
-                msg = 'Max limit can not be negative!'
-                self.add_error('limit', msg)
-
-        return cleaned_data
+    def clean_limit(self):
+        limit = self.cleaned_data.get('limit')
+        if limit < 0:
+            msg = 'Max limit can not be negative!'
+            self.add_error('limit', msg)
+        return limit
